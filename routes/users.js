@@ -1,10 +1,10 @@
-const User = require('../models/users.model');
-const router = require('express').Router();
+const router = require('express').Router()
+const User = require('../models/users.model')
 
 router.get('/', (req, res)=>{
     User.find()
-        .then(users=> res.json(users))
-        .catch(err => res.status(400).res.json( "Error: " + err))
+        .then(users => res.json(users))
+        .catch(err => err)
 })
 
 router.post('/add', (req, res)=>{
@@ -17,8 +17,14 @@ router.post('/add', (req, res)=>{
     })
 
     newUser.save()
-        .then(()=> res.json("User successfully saved to database"))
-        .catch(err => res.status(400).json('Error: ' + err))
+        .then(()=> res.json('New user has been saved...'))
+        .catch(err => res.status(400).json('err: ' + err))
 })
 
-module.exports = router;
+router.delete('/:id', (req, res)=>{
+    User.findByIdAndDelete(req.params.id)
+        .then(()=>res.json(`Deleted id: ${req.params.id}`))
+        .catch(err => res.status(400).json('err: ' + err))
+})
+
+module.exports = router
